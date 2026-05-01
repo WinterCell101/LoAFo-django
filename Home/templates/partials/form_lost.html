@@ -1,0 +1,235 @@
+<div>
+    <form method="POST" action="{% url 'report_item' %}" enctype="multipart/form-data" class="p-8 pt-0 space-y-5">
+        {% csrf_token %}
+
+        <input type="hidden" name="report_type" id="reportTypeInput" value="LOST">
+
+        <div>
+            <h1 class="text-center text-4xl text-indigo-800 font-bold"> LOST ITEM</h1>
+        </div>
+
+        <div class="space-y-4">
+            <div class="relative">
+                <select id="mainCategory" name="category" onchange="updateSubcategories()"
+                    class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none appearance-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm">
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="documents">Documents & ID</option>
+                    <option value="personal">Personal Items</option>
+                    <option value="others">Others</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                    <i class="fa fa-chevron-down text-sm"></i>
+                </div>
+            </div>
+
+            <div id="subCategoryWrapper" class="relative hidden">
+                <select id="subCategory" name="sub_category" onchange="showDescriptionOptions()"
+                    class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none appearance-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm">
+                    <option value="" disabled selected>Select Item Type</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                    <i class="fa fa-chevron-down text-sm"></i>
+                </div>
+            </div>
+
+            <div id="otherInputWrapper" class="hidden">
+                <input type="text" id="otherItemInput" name="custom_category" placeholder="Specify item name (e.g. Pink Calculator)"
+                    class="w-full px-4 py-3 bg-indigo-50 border-2 border-indigo-100 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm text-slate-600">
+            </div>
+
+            <div id="descriptionOptionsWrapper" class="hidden space-y-3">
+                <p class="text-[10px] font-bold text-slate-400 uppercase px-1">Specific Details</p>
+
+                <div id="colorFields" class="hidden">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div id="colorSelectionPart" class="relative">
+                            <select id="itemColor" name="color" onchange="checkOtherColor()"
+                                class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none appearance-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm">
+                                <option value="" disabled selected>Color</option>
+                                <option value="black">Black</option>
+                                <option value="white">White</option>
+                                <option value="silver">Silver/Grey</option>
+                                <option value="blue">Blue</option>
+                                <option value="red">Red</option>
+                                <option value="gold">Gold</option>
+                                <option value="other">Other Color</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                                <i class="fa fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+
+                        <div id="otherColorWrapper" class="opacity-0 pointer-events-none transition-all duration-300">
+                            <input type="text" id="customColor" name="custom_color" placeholder="Enter color..."
+                                class="w-full px-4 py-3 bg-indigo-50 border-2 border-indigo-100 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm text-slate-600">
+                        </div>
+                    </div>
+                </div>
+
+                <input type="text" name="location" placeholder="Last seen / Found at (Location)"
+                    class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm">
+
+                <input type="text" name="Trademark" placeholder="Exact location (Ex. IT102, under the Instructor's table)"
+                    class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm">
+
+                <textarea name="additional_info" rows="2" placeholder="Any other marks or labels?"
+                    class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm resize-none"></textarea>
+            </div>
+
+            <div class="space-y-2">
+                <p class="text-[10px] font-bold text-slate-400 uppercase px-1">Item Photo</p>
+
+                <label for="imageUpload" class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none focus-within:ring-2 focus-within:ring-indigo-600 flex items-center justify-between cursor-pointer">
+                    <span class="text-slate-500 text-sm" id="fileName">Upload an image (up to 5 images)...</span>
+                    <i class="fa fa-camera text-indigo-600"></i>
+
+                    <input type="file" id="imageUpload" name="images" accept="image/*" class="hidden" multiple
+                           onchange="handleMultipleFiles(this)">
+                </label>
+            </div>
+
+            <div id="reporterDescriptionOptionsWrapper" class="hidden space-y-4">
+                <hr class="border-slate-100 my-4">
+                <div class="space-y-3">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase px-1">Reporter Information</p>
+                    <input type="text" id="OwnerName" name="owner_name" placeholder="Full Name"
+                        class="w-full px-4 py-3 bg-indigo-50 border-2 border-indigo-100 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm text-slate-600">
+
+                    <input type="text" name="contact_info" placeholder="Phone Number or Social Media"
+                        class="w-full px-4 py-3 bg-indigo-50 border-2 border-indigo-100 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm text-slate-600">
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all">Submit Report</button>
+    </form>
+</div>
+
+<script>
+    const categoryConfig = {
+        'electronics': ['Smartphone', 'Laptop', 'Earphones', 'Charger', 'Other'],
+        'documents': ['Student ID', 'National ID', 'Passport', 'ATM Card', 'Other'],
+        'personal': ['Wallet', 'Keys', 'Backpack', 'Watch', 'Other'],
+        'others': ['Water Bottle', 'Umbrella', 'Books', 'Tools', 'Other']
+    };
+
+    function updateSubcategories() {
+        // MOVE CONST DEFINITIONS TO THE TOP
+        const mainCat = document.getElementById('mainCategory').value;
+        const subCatSelect = document.getElementById('subCategory');
+        const subWrapper = document.getElementById('subCategoryWrapper');
+        const optionsWrapper = document.getElementById('descriptionOptionsWrapper');
+        const reporterWrapper = document.getElementById('reporterDescriptionOptionsWrapper');
+        const otherWrapper = document.getElementById('otherInputWrapper');
+        const colorFields = document.getElementById('colorFields');
+        const colorSelect = document.getElementById('itemColor');
+        const otherColorWrapper = document.getElementById('otherColorWrapper');
+        const customColorInput = document.getElementById('customColor');
+
+        // Reset subcategories
+        subCatSelect.innerHTML = '<option value="" disabled selected>Select Item Type</option>';
+
+        // Hide all conditional wrappers initially
+        optionsWrapper.classList.add('hidden');
+        reporterWrapper.classList.add('hidden');
+        otherWrapper.classList.add('hidden');
+        subWrapper.classList.add('hidden');
+
+        // COLOR LOGIC: Hide for documents, show for others
+        const categoriesWithColor = ['electronics', 'personal', 'others'];
+        if (categoriesWithColor.includes(mainCat)) {
+            colorFields.classList.remove('hidden');
+            colorSelect.disabled = false;
+        } else {
+            colorFields.classList.add('hidden');
+            colorSelect.disabled = true;
+            colorSelect.value = "";
+        }
+
+        // SUBCATEGORY LOGIC
+        if (mainCat === 'others') {
+            // For 'others', we show everything immediately because sub-choice is optional/different
+            subWrapper.classList.remove('hidden');
+            otherWrapper.classList.add('hidden'); // Only show if they pick 'Other' subcat
+        }
+
+        if (categoryConfig[mainCat]) {
+            subWrapper.classList.remove('hidden');
+            categoryConfig[mainCat].forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.toLowerCase();
+                option.textContent = item;
+                subCatSelect.appendChild(option);
+            });
+        }
+
+        // Reset the "Other Color" text box
+        otherColorWrapper.classList.add('opacity-0', 'pointer-events-none');
+        customColorInput.required = false;
+        customColorInput.value = "";
+    }
+
+    function showDescriptionOptions() {
+        const subCat = document.getElementById('subCategory').value;
+        const optionsWrapper = document.getElementById('descriptionOptionsWrapper');
+        const reporterWrapper = document.getElementById('reporterDescriptionOptionsWrapper');
+        const otherWrapper = document.getElementById('otherInputWrapper');
+
+        // 1. Reset logic: Clear specific inputs whenever the Subcategory changes
+        // This prevents "ghost data" from a previous selection
+        const inputsToReset = optionsWrapper.querySelectorAll('input, textarea, select');
+        inputsToReset.forEach(input => {
+            if (input.type === 'file') {
+                input.value = ""; // Clear images
+                document.getElementById('fileName').textContent = "Upload an image (up to 5 images)...";
+            } else {
+                input.value = ""; // Clear text, colors, and descriptions
+            }
+        });
+
+        // 2. Visibility Logic
+        if (subCat) {
+            optionsWrapper.classList.remove('hidden');
+            reporterWrapper.classList.remove('hidden');
+        } else {
+            optionsWrapper.classList.add('hidden');
+            reporterWrapper.classList.add('hidden');
+        }
+
+        // 3. "Other" Specifier Logic
+        if (subCat === 'other') {
+            otherWrapper.classList.remove('hidden');
+            document.getElementById('otherItemInput').setAttribute('required', 'required');
+        } else {
+            otherWrapper.classList.add('hidden');
+            document.getElementById('otherItemInput').removeAttribute('required');
+        }
+    }
+
+    function checkOtherColor() {
+        const colorSelect = document.getElementById('itemColor');
+        const otherColorWrapper = document.getElementById('otherColorWrapper');
+        if (colorSelect.value === 'other') {
+            otherColorWrapper.classList.remove('opacity-0', 'pointer-events-none');
+            otherColorWrapper.classList.add('opacity-100');
+        } else {
+            otherColorWrapper.classList.add('opacity-0', 'pointer-events-none');
+            otherColorWrapper.classList.remove('opacity-100');
+        }
+    }
+    function handleMultipleFiles(input) {
+        const fileLabel = document.getElementById('fileName');
+        const count = input.files.length;
+
+        if (count > 5) {
+            alert("You can only upload a maximum of 5 images.");
+            input.value = ""; // Reset the input
+            fileLabel.textContent = "Select up to 5 images...";
+        } else if (count > 0) {
+            fileLabel.textContent = count + " images selected";
+        } else {
+            fileLabel.textContent = "Select up to 5 images...";
+        }
+    }
+</script>
