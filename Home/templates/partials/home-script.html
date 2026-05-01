@@ -1,0 +1,102 @@
+<script>
+function showTab(tab) {
+    const foundContainer = document.getElementById('found-container');
+    const lostContainer = document.getElementById('lost-container');
+    const btnFound = document.getElementById('btn-found');
+    const btnLost = document.getElementById('btn-lost');
+
+    if (tab === 'found') {
+        foundContainer.classList.remove('hidden');
+        lostContainer.classList.add('hidden');
+        btnFound.classList.add('bg-white', 'shadow-sm', 'text-indigo-600');
+        btnFound.classList.remove('text-slate-500');
+        btnLost.classList.remove('bg-white', 'shadow-sm', 'text-indigo-600');
+        btnLost.classList.add('text-slate-500');
+    } else {
+        lostContainer.classList.remove('hidden');
+        foundContainer.classList.add('hidden');
+        btnLost.classList.add('bg-white', 'shadow-sm', 'text-indigo-600');
+        btnLost.classList.remove('text-slate-500');
+        btnFound.classList.remove('bg-white', 'shadow-sm', 'text-indigo-600');
+        btnFound.classList.add('text-slate-500');
+    }
+}
+
+let modalImages = [];
+let currentModalIdx = 0;
+
+function openDetailModal(id, imgUrls, title, loc, exactLoc, owner, contact, desc) {
+    const modal = document.getElementById('detailModal');
+    const container = document.getElementById('modalImageContainer'); // Fixed typo here
+    const navButtons = document.getElementById('modalNavButtons');
+
+    modalImages = imgUrls || [];
+    currentModalIdx = 0;
+    container.innerHTML = '';
+
+    if (modalImages.length > 0) {
+        modalImages.forEach((url, index) => {
+            const img = document.createElement('img');
+            img.src = url;
+            // Using opacity for a smoother fade effect
+            img.className = `modal-slide-img w-full h-full object-contain transition-opacity duration-500 ease-in-out absolute inset-0 ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
+            container.appendChild(img);
+        });
+        navButtons.classList.toggle('hidden', modalImages.length <= 1);
+    } else {
+        container.innerHTML = `<div class="text-slate-300 flex flex-col items-center">
+                                    <i class="fa fa-image text-8xl mb-4"></i>
+                                    <p class="font-bold uppercase tracking-widest">No Photo</p>
+                                </div>`;
+        navButtons.classList.add('hidden');
+    }
+
+    document.getElementById('modalRef').textContent = "Reference #" + id;
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalLoc').innerHTML = `<i class="fa fa-map-marker-alt mr-3 text-indigo-400"></i> ${loc}`;
+    document.getElementById('modalOwner').textContent = owner;
+    document.getElementById('modalContact').textContent = contact;
+    document.getElementById('modalDesc').textContent = desc || "No details provided.";
+
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function changeModalSlide(direction) {
+    const slides = document.querySelectorAll('.modal-slide-img');
+    if (slides.length <= 1) return;
+
+    // Hide current
+    slides[currentModalIdx].classList.replace('opacity-100', 'opacity-0');
+
+    // Calculate next index
+    currentModalIdx = (currentModalIdx + direction + slides.length) % slides.length;
+
+    // Show next
+    slides[currentModalIdx].classList.replace('opacity-0', 'opacity-100');
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+const currentSlides = {};
+function changeSlide(itemId, direction) {
+    if (currentSlides[itemId] === undefined) currentSlides[itemId] = 0;
+    const images = document.querySelectorAll(`.slider-img-${itemId}`);
+    if (images.length <= 1) return;
+
+    images[currentSlides[itemId]].classList.add('hidden');
+    currentSlides[itemId] = (currentSlides[itemId] + direction + images.length) % images.length;
+    images[currentSlides[itemId]].classList.remove('hidden');
+}
+    // Fade out messages automatically
+    setTimeout(() => {
+        const msgs = document.querySelectorAll('.django-message');
+        msgs.forEach(m => {
+            m.style.opacity = '0';
+            setTimeout(() => m.remove(), 500);
+        });
+    }, 3000);
+</script>
