@@ -6,9 +6,9 @@
     <main class="flex-1 p-8 flex flex-col bg-slate-50/30">
         <header class="flex justify-between items-center mb-10">
             <div class="relative w-full md:w-2/5">
-                <form method="GET" action="{% url 'search_items' %}" class="relative w-full md:w-2/5">
-                    <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input
+               <form method="GET" action="{% url 'search_items' %}" class="relative w-full">
+                   <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                   <input
                         type="text"
                         name="q"
                         placeholder="Search by item name or ID..."
@@ -60,16 +60,18 @@
                 {% for item in found_items %}
                     {% include "partials/item_card.html" with item=item %}
                 {% empty %}
-                    <p class="text-slate-400 col-span-full text-center py-10">No found items yet.</p>
+                    <p class="text-slate-400 col-span-full text-center py-10">No items found matching <span class="font-bold text-indigo-600">"{{ query }}"</span>.</p>
+                    <p class="text-xs text-slate-300 mt-2 italic col-span-full text-center py-10"">Try searching for a brand, category, or reference ID.</p>
                  {% endfor %}
              </div>
              <div id="lost-container" class="hidden contents">
                 {% for item in lost_items %}
                     {% include "partials/item_card.html" with item=item %}
                 {% empty %}
-                    <p class="text-slate-400 col-span-full text-center py-10">No lost items reported yet.</p>
+                    <p class="text-slate-400 col-span-full text-center py-10">No items lost matching <span class="font-bold text-indigo-600">"{{ query }}"</span>.</p>
+                    <p class="text-xs text-slate-300 mt-2 italic col-span-full text-center py-10"">Try searching for a brand, category, or reference ID.</p>
                 {% endfor %}
-            </div>
+             </div>
         </div>
 
         <div id="detailModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
@@ -136,7 +138,7 @@
             </div>
         </div>
     </main>
-
+    {% include "add_ons/scroll_button.html" %}
     {% include "partials/report_modal.html" %}
     {% include "partials/home-script.html" %}
 {% endblock %}

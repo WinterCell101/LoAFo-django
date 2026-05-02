@@ -99,4 +99,32 @@ function changeSlide(itemId, direction) {
             setTimeout(() => m.remove(), 500);
         });
     }, 3000);
+// Inside partials/home-script.html
+
+const topBtn = document.getElementById('scrollToTopBtn');
+
+window.onscroll = function() {
+    if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+        topBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+        topBtn.classList.add('opacity-100', 'translate-y-0');
+    } else {
+        topBtn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+        topBtn.classList.remove('opacity-100', 'translate-y-0');
+    }
+};
+
+topBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// Search highlight logic
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('q')) {
+    // If you want to automatically switch to the 'Lost' tab if they search for a lost item:
+    // showTab('lost');
+    console.log("Searching for:", urlParams.get('q'));
+}
 </script>
