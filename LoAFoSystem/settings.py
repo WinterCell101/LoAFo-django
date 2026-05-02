@@ -9,12 +9,8 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-<<<<<<< HEAD
 
 import os
-=======
-import os.path
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -61,11 +57,7 @@ ROOT_URLCONF = 'LoAFoSystem.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-<<<<<<< HEAD
         'DIRS': [BASE_DIR / 'templates'],
-=======
-        'DIRS': [ BASE_DIR / 'templates' ],
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

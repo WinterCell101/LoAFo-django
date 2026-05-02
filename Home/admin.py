@@ -15,7 +15,6 @@ class ItemAdmin(admin.ModelAdmin):
     inlines = [ItemImageInline]
 
     # This makes the main list view much easier to read at a glance
-<<<<<<< HEAD
     list_display = ('item_id', 'created_at', 'item_name', 'item_status', 'owner_name')
 
     # Adds a sidebar filter for faster navigation
@@ -26,15 +25,6 @@ class ItemAdmin(admin.ModelAdmin):
 
     # Optional: Make the timestamp fields read-only so they can't be manually edited
     readonly_fields = ('created_at', 'updated_at')
-=======
-    list_display = ('id', 'item_status', 'category', 'location', 'owner_name')
-
-    # Adds a sidebar filter for faster navigation
-    list_filter = ('item_status', 'category', 'location')
-
-    # Adds a search bar
-    search_fields = ('title', 'owner_name', 'id')
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
 
 
 admin.site.site_header = "LoAFo Admin Portal"
