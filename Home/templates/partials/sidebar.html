@@ -11,6 +11,7 @@
     <span class="font-bold whitespace-nowrap">Report Lost Item</span>
    </button>
 
+<<<<<<< HEAD
    <nav class="space-y-4">
     <h3 class="font-bold text-slate-800 text-xs uppercase tracking-widest opacity-50">Locations</h3>
 
@@ -27,4 +28,12 @@
         </a>
     {% endfor %}
 </nav>
+=======
+    <nav class="space-y-4">
+        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-widest opacity-50">Locations</h3>
+        <a href="/" class="block text-sm font-bold {% if not request.GET.location %}text-indigo-600{% else %}text-slate-500{% endif %}">All Places</a>
+        <a href="?location=Library" class="block text-sm font-bold {% if request.GET.location == 'Library' %}text-indigo-600{% else %}text-slate-500{% endif %}">Main Library</a>
+        <a href="?location=Cafeteria" class="block text-sm font-bold {% if request.GET.location == 'Cafeteria' %}text-indigo-600{% else %}text-slate-500{% endif %}">Cafeteria</a>
+    </nav>
+>>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
 </aside>

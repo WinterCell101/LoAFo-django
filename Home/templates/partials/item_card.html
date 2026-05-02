@@ -1,7 +1,11 @@
 <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-slate-100 group hover:shadow-2xl transition-all duration-300"
     onclick="openDetailModal(
             '{{ item.id }}',
+<<<<<<< HEAD
             [{% for img in item.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}], '{{ item.item_brand|default:item.category|escapejs }}',
+=======
+            [{% for img in item.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}], '{{ item.sub_category|default:item.category|escapejs }}',
+>>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
             '{{ item.location|escapejs }}',
             '{{ item.exact_location|escapejs }}',
             '{{ item.owner_name|escapejs }}',
@@ -41,7 +45,11 @@
         {% endif %}
 
         <span class="absolute top-4 left-4 bg-indigo-600 text-white text-[11px] px-4 py-1.5 rounded-full font-bold shadow-lg">
+<<<<<<< HEAD
             Ref: #{{ item.item_id }}
+=======
+            Ref: #{{ item.id }}
+>>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
         </span>
     </div>
 
