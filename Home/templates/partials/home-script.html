@@ -1,25 +1,23 @@
 <script>
 function showTab(tab) {
-    const foundContainer = document.getElementById('found-container');
-    const lostContainer = document.getElementById('lost-container');
-    const btnFound = document.getElementById('btn-found');
-    const btnLost = document.getElementById('btn-lost');
+    const tabs = ['found', 'lost', 'claimed'];
 
-    if (tab === 'found') {
-        foundContainer.classList.remove('hidden');
-        lostContainer.classList.add('hidden');
-        btnFound.classList.add('bg-white', 'shadow-sm', 'text-indigo-600');
-        btnFound.classList.remove('text-slate-500');
-        btnLost.classList.remove('bg-white', 'shadow-sm', 'text-indigo-600');
-        btnLost.classList.add('text-slate-500');
-    } else {
-        lostContainer.classList.remove('hidden');
-        foundContainer.classList.add('hidden');
-        btnLost.classList.add('bg-white', 'shadow-sm', 'text-indigo-600');
-        btnLost.classList.remove('text-slate-500');
-        btnFound.classList.remove('bg-white', 'shadow-sm', 'text-indigo-600');
-        btnFound.classList.add('text-slate-500');
-    }
+    tabs.forEach(t => {
+        const container = document.getElementById(`${t}-container`);
+        const button = document.getElementById(`btn-${t}`);
+
+        if (t === tab) {
+            // Show this tab
+            container.classList.remove('hidden');
+            button.classList.add('bg-white', 'shadow-sm', 'text-indigo-600');
+            button.classList.remove('text-slate-500');
+        } else {
+            // Hide the others
+            container.classList.add('hidden');
+            button.classList.remove('bg-white', 'shadow-sm', 'text-indigo-600');
+            button.classList.add('text-slate-500');
+        }
+    });
 }
 
 let modalImages = [];
@@ -118,6 +116,13 @@ topBtn.addEventListener('click', () => {
         top: 0,
         behavior: 'smooth'
     });
+});
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTab = urlParams.get('tab');
+    if (activeTab) {
+        showTab(activeTab);
+    }
 });
 
 // Search highlight logic

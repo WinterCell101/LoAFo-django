@@ -1,17 +1,20 @@
-<div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-slate-100 group hover:shadow-2xl transition-all duration-300"
-    onclick="openDetailModal(
+<div class="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 rounded-[2.5rem] p-6 relative overflow-hidden shadow-sm border group hover:shadow-2xl dark:hover:shadow-glow hover:-translate-y-1 transition-all duration-300"
+     onclick="openDetailModal(
             '{{ item.id }}',
-<<<<<<< HEAD
             [{% for img in item.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}], '{{ item.item_brand|default:item.category|escapejs }}',
-=======
-            [{% for img in item.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}], '{{ item.sub_category|default:item.category|escapejs }}',
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
             '{{ item.location|escapejs }}',
             '{{ item.exact_location|escapejs }}',
             '{{ item.owner_name|escapejs }}',
             '{{ item.contact_info|escapejs }}',
             '{{ item.additional_location|escapejs }}'
         )">
+
+    {% if item.item_status == 'CLAIMED' %}
+        <div class="claimed-ribbon">
+            Claimed
+        </div>
+    {% endif %}
+
     <div class="relative rounded-[2rem] overflow-hidden aspect-square mb-6 bg-slate-50 flex items-center justify-center">
         <div id="slider-{{ item.id }}" class="w-full h-full">
             {% for img_obj in item.images.all %}
@@ -24,6 +27,9 @@
                 </div>
             {% endfor %}
         </div>
+        <span class="absolute top-4 left-4 bg-indigo-600 text-white text-[11px] px-4 py-1.5 rounded-full font-bold shadow-lg z-20">
+            Ref: #{{ item.item_id }}
+        </span>
 
         {% if item.images.all.count > 1 %}
             <div class="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between opacity-0 group-hover/slider:opacity-100 transition-opacity">
@@ -43,48 +49,42 @@
                 {% endfor %}
             </div>
         {% endif %}
-
-        <span class="absolute top-4 left-4 bg-indigo-600 text-white text-[11px] px-4 py-1.5 rounded-full font-bold shadow-lg">
-<<<<<<< HEAD
-            Ref: #{{ item.item_id }}
-=======
-            Ref: #{{ item.id }}
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
-        </span>
     </div>
 
     <div class="px-2">
-        <h4 class="font-black text-slate-800 text-2xl leading-tight mb-2 capitalize">
+        <h4 class="font-black text-slate-800 dark:text-white text-2xl leading-tight mb-2 capitalize">
             {{ item.sub_category|default:item.category }}
         </h4>
 
         <div class="mb-6">
-            <p class="text-sm text-slate-800 flex items-center font-bold">
+            <!-- Inside item_card.html -->
+            <a href="{% url 'search_items' %}?q={{ item.location }}&tab={{ item.item_status|lower }}"
+               class="text-sm text-slate-800 dark:text-slate-200 flex items-center font-bold hover:text-indigo-600 transition-all">
                 <i class="fa fa-map-marker-alt mr-2 text-indigo-500"></i> {{ item.location }}
-            </p>
+            </a>
 
             {% if item.exact_location %}
             <p class="text-xs text-slate-400 flex items-center mt-1 ml-6 font-medium italic">
                 {{ item.exact_location }}
             </p>
-            {% elif item.addtional_location %}
+            {% elif item.additional_location %}
             <p class="text-xs text-slate-400 flex items-center mt-1 ml-6 font-medium italic">
                 {{ item.additional_location }}
             </p>
             {% endif %}
         </div>
 
-        <div class="bg-slate-50/80 rounded-[1.8rem] p-5 border border-slate-100">
+        <div class="bg-slate-50/80 dark:bg-slate-800/50 rounded-[1.8rem] p-5 border border-slate-100 dark:border-slate-700">
             <div class="flex justify-between items-center mb-3">
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Contact</span>
                 <span class="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-3 py-1 rounded-lg">Active</span>
             </div>
 
-            <p class="text-sm font-bold text-slate-700 mb-4">{{ item.owner_name }}</p>
+            <p class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-4">{{ item.owner_name }}</p>
 
-            <button class="w-full py-3.5 bg-white text-indigo-600 border border-indigo-100 rounded-2xl font-bold text-xs hover:bg-indigo-600 hover:text-white transition-all duration-300">
-                Verify Ownership
-            </button>
+            <span class="flex items-center justify-center w-full py-3.5 bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900 rounded-2xl font-bold text-xs hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 transition-all duration-300 cursor-pointer shadow-sm">
+                Click to View
+            </span>
         </div>
     </div>
 </div>

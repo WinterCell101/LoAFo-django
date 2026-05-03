@@ -4,6 +4,7 @@ class Item(models.Model):
     STATUS_CHOICES = [
         ('LOST', 'Lost Item'),
         ('FOUND', 'Found Item'),
+        ('CLAIMED', 'Claimed Item'),
     ]
     CATEGORY_CHOICES = [
         ('electronics', 'Electronics'),

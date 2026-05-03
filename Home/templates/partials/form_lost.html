@@ -10,11 +10,7 @@
 
         <div class="space-y-4">
             <div class="relative">
-<<<<<<< HEAD
                 <select id="mainCategory" name="category" onchange="updateSubcategories()" required
-=======
-                <select id="mainCategory" name="category" onchange="updateSubcategories()"
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
                     class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none appearance-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm">
                     <option value="" disabled selected>Select Category</option>
                     <option value="electronics">Electronics</option>
@@ -27,7 +23,6 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
             <div id="subCategoryWrapper" class="relative hidden" >
                 <select id="subCategory" name="sub_category" onchange="showDescriptionOptions()" required
                     class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none appearance-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm">
@@ -40,24 +35,11 @@
                 <div id="brandItemWrapper" class="mb-4 hidden">
                      <input type="text" id="BrandItem" name="item_brand" placeholder="Specify brand name/model"
                     class="w-full px-4 py-3 bg-indigo-50 border-2 border-indigo-100 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm text-slate-600">
-=======
-            <div id="subCategoryWrapper" class="relative hidden">
-                <select id="subCategory" name="sub_category" onchange="showDescriptionOptions()"
-                    class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none appearance-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm">
-                    <option value="" disabled selected>Select Item Type</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
-                    <i class="fa fa-chevron-down text-sm"></i>
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
                 </div>
             </div>
 
             <div id="otherInputWrapper" class="hidden">
-<<<<<<< HEAD
                 <input type="text" id="otherItemInput" name="custom_category" placeholder="Specify item name (e.g. Pink Calculator)" required
-=======
-                <input type="text" id="otherItemInput" name="custom_category" placeholder="Specify item name (e.g. Pink Calculator)"
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
                     class="w-full px-4 py-3 bg-indigo-50 border-2 border-indigo-100 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm text-slate-600">
             </div>
 
@@ -67,11 +49,7 @@
                 <div id="colorFields" class="hidden">
                     <div class="grid grid-cols-2 gap-3">
                         <div id="colorSelectionPart" class="relative">
-<<<<<<< HEAD
                             <select id="itemColor" name="color" onchange="checkOtherColor()" required
-=======
-                            <select id="itemColor" name="color" onchange="checkOtherColor()"
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
                                 class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none appearance-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm">
                                 <option value="" disabled selected>Color</option>
                                 <option value="black">Black</option>
@@ -88,21 +66,13 @@
                         </div>
 
                         <div id="otherColorWrapper" class="opacity-0 pointer-events-none transition-all duration-300">
-<<<<<<< HEAD
                             <input type="text" id="customColor" name="custom_color" placeholder="Enter color..." required
-=======
-                            <input type="text" id="customColor" name="custom_color" placeholder="Enter color..."
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
                                 class="w-full px-4 py-3 bg-indigo-50 border-2 border-indigo-100 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm text-slate-600">
                         </div>
                     </div>
                 </div>
 
-<<<<<<< HEAD
                 <input type="text" name="location" placeholder="Last seen / Found at (Location)" required
-=======
-                <input type="text" name="location" placeholder="Last seen / Found at (Location)"
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
                     class="w-full px-4 py-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-indigo-600 outline-none text-slate-600 text-sm">
 
                 <input type="text" name="Trademark" placeholder="Exact location (Ex. IT102, under the Instructor's table)"
@@ -137,13 +107,9 @@
             </div>
         </div>
 
-<<<<<<< HEAD
         <button type="submit" id="submitBtn" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all">
             {% include "add_ons/loading_effect.html" %}
             <span id="btnText">Submit Report</span></button>
-=======
-        <button type="submit" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all">Submit Report</button>
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
     </form>
 </div>
 
@@ -156,7 +122,6 @@
     };
 
     function updateSubcategories() {
-<<<<<<< HEAD
         const mainCat = document.getElementById('mainCategory').value;
         const subCatSelect = document.getElementById('subCategory');
         const subWrapper = document.getElementById('subCategoryWrapper');
@@ -165,36 +130,18 @@
         const optionsWrapper = document.getElementById('descriptionOptionsWrapper');
         const reporterWrapper = document.getElementById('reporterDescriptionOptionsWrapper');
         const otherWrapper = document.getElementById('otherInputWrapper');
-
-=======
-        // MOVE CONST DEFINITIONS TO THE TOP
-        const mainCat = document.getElementById('mainCategory').value;
-        const subCatSelect = document.getElementById('subCategory');
-        const subWrapper = document.getElementById('subCategoryWrapper');
-        const optionsWrapper = document.getElementById('descriptionOptionsWrapper');
-        const reporterWrapper = document.getElementById('reporterDescriptionOptionsWrapper');
-        const otherWrapper = document.getElementById('otherInputWrapper');
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
         const colorFields = document.getElementById('colorFields');
         const colorSelect = document.getElementById('itemColor');
         const otherColorWrapper = document.getElementById('otherColorWrapper');
         const customColorInput = document.getElementById('customColor');
 
-<<<<<<< HEAD
         // 1. Reset and Hide everything initially
         subCatSelect.innerHTML = '<option value="" disabled selected>Select Item Type</option>';
-=======
-        // Reset subcategories
-        subCatSelect.innerHTML = '<option value="" disabled selected>Select Item Type</option>';
-
-        // Hide all conditional wrappers initially
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
         optionsWrapper.classList.add('hidden');
         reporterWrapper.classList.add('hidden');
         otherWrapper.classList.add('hidden');
         subWrapper.classList.add('hidden');
 
-<<<<<<< HEAD
         // 2. BRAND LOGIC (This is the "Truth")
         const categoriesWithBrand = ['electronics', 'personal', 'others'];
         const showBrand = categoriesWithBrand.includes(mainCat);
@@ -207,9 +154,6 @@
         }
 
         // 3. COLOR LOGIC
-=======
-        // COLOR LOGIC: Hide for documents, show for others
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
         const categoriesWithColor = ['electronics', 'personal', 'others'];
         if (categoriesWithColor.includes(mainCat)) {
             colorFields.classList.remove('hidden');
@@ -220,17 +164,7 @@
             colorSelect.value = "";
         }
 
-<<<<<<< HEAD
         // 4. SUBCATEGORY LOGIC
-=======
-        // SUBCATEGORY LOGIC
-        if (mainCat === 'others') {
-            // For 'others', we show everything immediately because sub-choice is optional/different
-            subWrapper.classList.remove('hidden');
-            otherWrapper.classList.add('hidden'); // Only show if they pick 'Other' subcat
-        }
-
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
         if (categoryConfig[mainCat]) {
             subWrapper.classList.remove('hidden');
             categoryConfig[mainCat].forEach(item => {
@@ -241,14 +175,10 @@
             });
         }
 
-<<<<<<< HEAD
         // IMPORTANT: Ensure no other brandWrapper.classList.remove('hidden')
         // calls exist below this point in the function.
 
         // Reset the "Other Color" UI
-=======
-        // Reset the "Other Color" text box
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
         otherColorWrapper.classList.add('opacity-0', 'pointer-events-none');
         customColorInput.required = false;
         customColorInput.value = "";
@@ -316,7 +246,6 @@
             fileLabel.textContent = "Select up to 5 images...";
         }
     }
-<<<<<<< HEAD
     // Add this to your existing <script>
     document.querySelector('form').addEventListener('submit', function(e) {
         if (!navigator.onLine) {
@@ -338,6 +267,4 @@
 
         // The form will now proceed to your 'report_item' view
     });
-=======
->>>>>>> e9f6aeeac7a6ec25f7db247fd35f354f53b26526
 </script>

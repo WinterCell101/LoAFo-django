@@ -1,9 +1,8 @@
 <div id="reportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm px-4">
-    <div id="modalContent" class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden relative flex flex-col max-h-[90vh]">
-
-        <div class="p-8 pb-4 bg-white border-b border-slate-50">
+    <div id="modalContent" class="bg-white dark:bg-slate-900 hover:shadow-2xl dark:hover:shadow-glow hover:-translate-y-1 w-full max-w-lg rounded-[2.5rem] shadow-2xl relative flex flex-col max-h-[90vh] transform transition-all duration-300">
+        <div class="p-8 pb-4 bg-white dark:bg-slate-900 border-b rounded-[2.5rem] border-slate-50 dark:border-slate-800">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-black text-slate-800">New Report</h2>
+                <h2 class="text-2xl font-black text-slate-800 dark:text-white">New Report</h2>
                 <button onclick="toggleModal('LOST')" class="text-slate-400 hover:text-rose-500"><i class="fa fa-times text-xl"></i></button>
             </div>
         </div>
@@ -17,12 +16,12 @@
 </div>
 
 <style>
-    /* Nindot nga scrollbar para dili hugaw tan-awon */
     .custom-scrollbar::-webkit-scrollbar { width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
 </style>
+
 <script>
     // Update the function to accept 'type' (either 'LOST' or 'FOUND')
     function toggleModal(type) {
