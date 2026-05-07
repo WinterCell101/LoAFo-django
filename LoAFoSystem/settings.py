@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-cil5i@e@fi2=%rr7el8oq7g3m1walpk=u)t^k!1l=6(5)y)su!'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.sites',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
     'Home',
 ]
 
@@ -64,6 +69,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.debug',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     }
@@ -81,6 +89,28 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# 2. Add Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+SITE_ID = 1
+
+# 3. Account Settings (Email Login & Sessions)
+ACCOUNT_LOGIN_METHODS = {'email'}  # Use email to log in
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']       # Optional: makes it easier for users
+ACCOUNT_SESSION_REMEMBER = True          # Helps with the "hassle" of logging in
+SESSION_COOKIE_AGE = 1209600             # Stay logged in for 2 weeks
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000']
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('GOOGLE_OAUTH_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('GOOGLE_OAUTH_SECRET')
+
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
 
 
 # Password validation
@@ -117,6 +147,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR / 'media')

@@ -26,7 +26,6 @@ class ItemAdmin(admin.ModelAdmin):
     # Optional: Make the timestamp fields read-only so they can't be manually edited
     readonly_fields = ('created_at', 'updated_at')
 
-
 admin.site.site_header = "LoAFo Admin Portal"
 admin.site.site_title = "LoAFo"
 admin.site.index_title = "Welcome to LoAFo Management"

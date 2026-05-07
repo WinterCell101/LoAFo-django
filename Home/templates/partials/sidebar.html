@@ -1,9 +1,10 @@
-<aside class="w-full md:w-72 p-8 border-r border-gray-300 dark:border-slate-800 bg-white dark:bg-slate-900 transition-colors duration-300">
+{% load static %}
+<aside class="w-full md:w-72 p-8 border-r border-gray-300 dark:border-slate-800 bg-slate-300 dark:bg-slate-900 transition-colors duration-300">
     <div class="flex items-center space-x-4 mb-10">
-        <div class="bg-indigo-600 p-2 rounded-xl text-white">
-            <i class="fa-solid fa-magnifying-glass-location fa-lg"></i>
+       <div class="bg-indigo-600 p-2.5 rounded-xl text-white shrink-0 shadow-lg overflow-hidden">
+            <img src="{% static 'logo.png' %}" alt="LoAFo" class="w-12 h-12 object-contain rounded-lg">
         </div>
-        <h1 class="text-3xl font-black text-slate-800 dark:text-white tracking-tighter">Lo<span class="text-indigo-600">AFo</span></h1>
+        <h1 class="text-3xl font-black text-slate-800 dark:text-white tracking-tighter">Lo<span class="text-indigo-600">AF</span>o</h1>
     </div>
 
     <button onclick="toggleModal()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-900 text-white rounded-xl transition-all mb-8 flex items-center justify-center gap-2" style="font-size: 13px;">
