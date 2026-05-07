@@ -69,6 +69,21 @@ class Item(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_formatted_description(self):
+        """Compiles item details into a clean, bulleted format."""
+        details = [
+            f"• Category: {self.sub_category}",
+            f"• Item: {self.item_name}",
+            f"• Color: {self.color}",
+            f"• Location: {self.location} ({self.exact_location})",
+            f"• Notes: {self.additional_location if self.additional_location else 'N/A'}",
+        ]
+        return "\n".join(details)
+
+    def get_contact_info(self):
+        """Compiles owner and contact data."""
+        return f"Contact Person: {self.owner_name}\nContact Info: {self.contact_info}"
+
     def __str__(self):
         return f"{self.item_status} - {self.item_name or 'Unnamed Item'}"
 
@@ -77,5 +92,5 @@ class ItemImage(models.Model):
     image = models.ImageField(upload_to='images/')
 
     def __str__(self):
-        return f"Image for {self.item.item_brand} ({self.item.id})"
+        return f"Image for {self.item.item_name} ({self.item.item_id})"
 # Create your models here.
