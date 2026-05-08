@@ -4,9 +4,9 @@
     {% include "add_ons/claimed_indication.css" %}
     {% include "partials/sidebar.html" %}
 
-    <main class="flex-1 p-8 border-gray-300 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-950 transition-colors flex flex-col bg-slate-50/30">
+    <main class="flex-1 p-8 border-gray-300 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-950 transition-colors flex flex-col">
         <header class="flex justify-between items-center mb-10">
-            <div class="relative w-full md:w-2/5 ">
+            <div class="relative w-full md:w-2/5">
                <form method="GET" action="{% url 'search_items' %}" class="relative w-full">
                    <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                    <input
@@ -34,58 +34,43 @@
                     <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Total Claimed</p>
                     <p class="text-lg text-indigo-600">{{ claimed_count }}</p>
                 </div>
-                <!-- Wrapper Div (kept for layout consistency) -->
-                <div class="mt-auto p-8 border-t border-slate-100 dark:border-slate-800 flex justify-start items-center gap-3">
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <!-- 1. THE INPUT (The Peer) -->
-                        <input type="checkbox" id="theme-toggle" class="sr-only peer" onchange="toggleDarkMode()">
 
-                        <!-- 2. THE TRACK (Sibling to Input) -->
+                <!-- Theme Toggle -->
+                <div class="p-2 border-t border-slate-100 dark:border-slate-800 flex justify-start items-center gap-3">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="theme-toggle" class="sr-only peer" onchange="toggleDarkMode()">
                         <div class="w-14 h-7 bg-slate-200 dark:bg-slate-800 rounded-full border-2 border-slate-800 dark:border-slate-400
                                     peer-checked:bg-blue-600 transition-all duration-300 flex items-center justify-between px-1.5 relative">
-
                             <i class="fa fa-moon text-[10px] text-slate-500 dark:text-blue-200"></i>
                             <i class="fa fa-sun text-[10px] text-yellow-500 opacity-0 dark:opacity-100 transition-opacity"></i>
                         </div>
-
-                        <!-- 3. THE SLIDING CIRCLE (Also a Sibling to Input) -->
                         <div class="absolute top-[3px] left-[4px] w-5 h-5 bg-slate-800 dark:bg-white rounded-full
-                                    transition-all duration-300 transform
-                                    peer-checked:translate-x-[28px]">
+                                    transition-all duration-300 transform peer-checked:translate-x-[28px]">
                         </div>
                     </label>
                 </div>
-                <!-- Main Dropdown Wrapper -->
+
+                <!-- User Dropdown -->
                 <div class="relative inline-block group">
-                    <!-- Trigger Button (Blue Circle with Bars) -->
                     <button type="button" class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white shadow-lg transition-transform active:scale-95">
                         <i class="fa fa-bars text-sm"></i>
                     </button>
-
-                    <!-- The Main Dropdown Menu -->
-                    <!-- Removed 'overflow-hidden' so the profile card can pop out to the left -->
                     <div class="absolute right-0 top-full mt-2 w-56 invisible opacity-0 translate-y-[-10px] group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-50">
                         <div class="bg-[#1e293b] border border-slate-700 rounded-2xl shadow-2xl py-2 overflow-visible">
-
-                            <!-- PROFILE SETTINGS ITEM -->
                             <div class="relative group/info">
-                                <!-- Change '#' to your profile URL when ready -->
                                 <a href="#" class="flex items-center justify-between px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
                                     <div class="flex items-center gap-3">
                                         <i class="fa fa-user-circle opacity-50"></i>
-                                        Profile Settings
+                                        Profile
                                     </div>
                                     <i class="fa fa-chevron-left text-[10px] opacity-30 group-hover/info:opacity-100 transition-all"></i>
                                 </a>
-
-                                <!-- THE FLOATING CARD (Registration Info) -->
-                                <!-- pointer-events-none ensures it doesn't block clicks on the menu behind it -->
                                 <div class="absolute right-full top-0 mr-2 w-60 invisible opacity-0 pointer-events-none group-hover/info:visible group-hover/info:opacity-100 translate-x-2 group-hover/info:translate-x-0 transition-all duration-300">
                                     <div class="bg-[#1e293b] border border-slate-700 rounded-xl shadow-2xl p-4 text-left">
                                         <div class="space-y-3">
                                             <div class="flex flex-col border-b border-slate-700/50 pb-2">
                                                 <span class="text-slate-500 text-[9px] font-black uppercase tracking-widest">Full Name</span>
-                                                <span class="text-white font-bold text-xs">{{ user.username }}</span>
+                                                <span class="text-white font-bold text-xs">{{ user.get_full_name|default:user.username }}</span>
                                             </div>
                                             <div class="flex flex-col">
                                                 <span class="text-slate-500 text-[9px] font-black uppercase tracking-widest">Email Address</span>
@@ -95,11 +80,7 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- DIVIDER -->
                             <div class="my-1 border-t border-slate-700/50"></div>
-
-                            <!-- LOGOUT ITEM -->
                             <form action="{% url 'logout' %}" method="post" class="m-0">
                                 {% csrf_token %}
                                 <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-colors font-medium border-none bg-transparent cursor-pointer">
@@ -112,113 +93,139 @@
                 </div>
             </div>
         </header>
-            <nav class="flex space-x-2 mb-8 bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl self-start">
-                <button id="btn-lost" onclick="showTab('lost')"
-                    class="px-8 py-2.5 rounded-xl {% if request.GET.tab == 'lost' or not request.GET.tab %}bg-white shadow-sm text-indigo-600{% else %}text-slate-500{% endif %} font-bold text-sm transition-all">
-                    Lost Items
-                </button>
-                <button id="btn-found" onclick="showTab('found')"
-                    class="px-8 py-2.5 rounded-xl {% if request.GET.tab == 'found' %}bg-white shadow-sm text-indigo-600{% else %}text-slate-500{% endif %} font-bold text-sm transition-all">
-                    Found Items
-                </button>
-                <button id="btn-claimed" onclick="showTab('claimed')"
-                    class="px-8 py-2.5 rounded-xl {% if request.GET.tab == 'claimed' %}bg-white shadow-sm text-indigo-600{% else %}text-slate-500{% endif %} font-bold text-sm transition-all">
-                    Claimed Items
-                </button>
-            </nav>
+
+        <!-- Tab navigation -->
+        <nav class="flex space-x-2 mb-8 bg-slate-800 dark:bg-slate-100 p-1.5 rounded-2xl self-start">
+            <button id="btn-lost" onclick="showTab('lost')"
+                class="px-8 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-indigo-600">
+                Lost Items
+            </button>
+            <button id="btn-found" onclick="showTab('found')"
+                class="px-8 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-indigo-600">
+                Found Items
+            </button>
+            <button id="btn-claimed" onclick="showTab('claimed')"
+                class="px-8 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-indigo-600">
+                Claimed Items
+            </button>
+        </nav>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-             <div id="found-container" class="{% if request.GET.tab != 'found' and request.GET.tab %}hidden{% endif %} contents">
-                {% for item in found_items %}
-                    {% include "partials/item_card.html" with item=item %}
-                {% empty %}
-                    <p class="text-slate-400 col-span-full text-center py-10">No items found matching <span class="font-bold text-indigo-600">"{{ query }}"</span>.</p>
-                    <p class="text-xs text-slate-300 mt-2 italic col-span-full text-center py-10"">Try searching for a brand, category, or reference ID.</p>
-                 {% endfor %}
-             </div>
-             <div id="lost-container" class="{% if request.GET.tab != 'lost' %}hidden{% endif %} contents">
+            <div id="lost-container" class="hidden contents">
                 {% for item in lost_items %}
                     {% include "partials/item_card.html" with item=item %}
                 {% empty %}
-                    <p class="text-slate-400 col-span-full text-center py-10">No items lost matching <span class="font-bold text-indigo-600">"{{ query }}"</span>.</p>
-                    <p class="text-xs text-slate-300 mt-2 italic col-span-full text-center py-10"">Try searching for a brand, category, or reference ID.</p>
+                    <p class="text-slate-400 col-span-full text-center py-10">No lost items{% if query %} matching <span class="font-bold text-indigo-600">"{{ query }}"</span>{% endif %}.</p>
                 {% endfor %}
-             </div>
-             <div id="claimed-container" class="{% if request.GET.tab != 'claimed' %}hidden{% endif %} contents">
+            </div>
+            <div id="found-container" class="hidden contents">
+                {% for item in found_items %}
+                    {% include "partials/item_card.html" with item=item %}
+                {% empty %}
+                    <p class="text-slate-400 col-span-full text-center py-10">No found items{% if query %} matching <span class="font-bold text-indigo-600">"{{ query }}"</span>{% endif %}.</p>
+                {% endfor %}
+            </div>
+            <div id="claimed-container" class="hidden contents">
                 {% for item in claimed_items %}
                     {% include "partials/item_card.html" with item=item %}
                 {% empty %}
-                    <p class="text-slate-400 col-span-full text-center py-10">No items claimed matching <span class="font-bold text-indigo-600">"{{ query }}"</span>.</p>
-                    <p class="text-xs text-slate-300 mt-2 italic col-span-full text-center py-10"">Try searching for a brand, category, or reference ID.</p>
+                    <p class="text-slate-400 col-span-full text-center py-10">No claimed items{% if query %} matching <span class="font-bold text-indigo-600">"{{ query }}"</span>{% endif %}.</p>
                 {% endfor %}
-             </div>
+            </div>
         </div>
 
-        <div id="detailModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-            <div class="bg-white w-full max-w-4xl rounded-[3rem] overflow-hidden shadow-2xl relative flex flex-col md:flex-row max-h-[90vh]">
+        <!-- Detail Modal with full slideshow -->
+        <div id="detailModal"
+             class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm"
+             onclick="handleModalOverlayClick(event)">
 
-                <button onclick="closeDetailModal()" class="absolute top-6 right-6 z-[110] bg-white/80 backdrop-blur-md p-3 rounded-2xl text-slate-500 hover:text-rose-500 transition-all shadow-sm">
+            <div id="detailModalCard"
+                 class="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-[2.5rem] shadow-2xl relative flex flex-col md:flex-row max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-95 opacity-0">
+
+                <button onclick="closeDetailModal()"
+                        class="absolute top-4 right-4 z-[120] bg-white/90 backdrop-blur-md p-3 rounded-2xl text-slate-500 hover:text-rose-500 transition-all shadow-lg border border-slate-100">
                     <i class="fa fa-times text-xl"></i>
                 </button>
 
-                <div class="w-full md:w-1/2 bg-slate-50 flex items-center justify-center overflow-hidden">
-                    <div id="modalImageContainer" class="relative w-full h-full flex items-center justify-center">
-                        </div>
-
-                    <div id="modalNavButtons" class="absolute inset-x-4 flex justify-between pointer-events-none opacity-0 group-hover/modal-slide:opacity-100 transition-opacity">
-                       <button onclick="changeModalSlide(-1)"
-                               class="pointer-events-auto bg-white/90 backdrop-blur-md p-4 rounded-3xl shadow-xl text-indigo-600 hover:bg-indigo-600 hover:text-white hover:scale-110 active:scale-95 transition-all border border-white/50">
-                            <i class="fa fa-chevron-left text-lg"></i>
-                       </button>
-                        <button onclick="changeModalSlide(1)"
-                                class="pointer-events-auto bg-white/90 backdrop-blur-md p-4 rounded-3xl shadow-xl text-indigo-600 hover:bg-indigo-600 hover:text-white hover:scale-110 active:scale-95 transition-all border border-white/50">
-                            <i class="fa fa-chevron-right text-lg"></i>
+                <!-- Image panel with slideshow -->
+                <div class="w-full md:w-1/2 bg-slate-100 dark:bg-slate-800 flex items-center justify-center h-[260px] md:h-auto relative overflow-hidden border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-700">
+                    <div id="modalImageContainer" class="w-full h-full relative flex items-center justify-center">
+                        <!-- images injected by JS -->
+                    </div>
+                    <!-- Nav buttons -->
+                    <div id="modalNavButtons" class="hidden absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-30">
+                        <button onclick="prevModalImg()" class="bg-white/80 backdrop-blur-md p-3 rounded-full shadow-md hover:bg-white text-indigo-600 transition-all">
+                            <i class="fa fa-chevron-left text-sm"></i>
+                        </button>
+                        <button onclick="nextModalImg()" class="bg-white/80 backdrop-blur-md p-3 rounded-full shadow-md hover:bg-white text-indigo-600 transition-all">
+                            <i class="fa fa-chevron-right text-sm"></i>
                         </button>
                     </div>
+                    <!-- Dot indicators -->
+                    <div id="modalDots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-30"></div>
                 </div>
 
-                <div class="w-full md:w-1/2 p-10 overflow-y-auto">
-                    <span id="modalRef" class="text-indigo-600 font-bold text-sm tracking-widest uppercase mb-2 block"></span>
-                    <h2 id="modalTitle" class="text-4xl font-black text-slate-800 mb-6 leading-tight capitalize"></h2>
+                <!-- Info panel -->
+                <div class="w-full md:w-1/2 p-8 flex flex-col overflow-y-auto custom-scrollbar">
+                    <div class="mb-2">
+                        <span id="modalRef" class="text-[10px] font-black text-indigo-400 uppercase tracking-widest"></span>
+                    </div>
+                    <h2 id="modalTitle" class="text-3xl font-black text-slate-800 dark:text-white capitalize mb-1"></h2>
+                    <p id="modalSubcategory" class="text-slate-500 dark:text-slate-400 text-sm mb-6"></p>
 
-                    <div class="space-y-6">
-                        <div>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Last Seen / Found At</p>
-                            <p id="modalLoc" class="text-slate-600 flex items-center font-medium">
-                                <i class="fa fa-map-marker-alt mr-3 text-indigo-400"></i>
-                            </p>
-                            <p id="modalExactLoc" class="text-sm text-slate-500 mt-1 ml-7 italic font-medium"></p>
-                            <p id="modalAddLoc" class="text-sm text-slate-500 mt-1 ml-7 italic font-medium"></p>
-                                <i class="fa fa-note-alt mr-3 text-indigo-400"></i>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Reporter</p>
-                                <p id="modalOwner" class="text-sm font-bold text-slate-800"></p>
-                            </div>
-                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Contact Info</p>
-                                <p id="modalContact" class="text-sm font-bold text-indigo-600"></p>
+                    <div class="space-y-4 flex-1">
+                        <div class="flex items-start gap-3">
+                            <i class="fa fa-map-marker-alt text-indigo-500 mt-0.5"></i>
+                            <div>
+                                <p id="modalLoc" class="font-bold text-slate-700 dark:text-slate-300 text-sm"></p>
+                                <p id="modalExactLoc" class="text-slate-400 text-xs italic mt-0.5"></p>
                             </div>
                         </div>
-
-                        <div>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Additional Description</p>
-                            <p id="modalDesc" class="text-sm text-slate-500 leading-relaxed italic"></p>
+                        <div class="flex items-start gap-3">
+                            <i class="fa fa-user text-indigo-500 mt-0.5"></i>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Reporter</p>
+                                <p id="modalOwner" class="font-bold text-slate-700 dark:text-slate-300 text-sm"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fa fa-phone text-indigo-500 mt-0.5"></i>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Contact</p>
+                                <p id="modalContact" class="font-bold text-slate-700 dark:text-slate-300 text-sm"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fa fa-info-circle text-indigo-500 mt-0.5"></i>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Details</p>
+                                <p id="modalDesc" class="text-slate-600 dark:text-slate-400 text-sm whitespace-pre-line"></p>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mt-10 pt-8 border-t border-slate-100">
-                        <button class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all">
-                            Message Reporter
+                    <div class="mt-6">
+                        <button class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-xl hover:bg-indigo-700 transition-all transform active:scale-95">
+                            Approach Student Affairs Office
                         </button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
     {% include "add_ons/scroll_button.html" %}
     {% include "partials/report_modal.html" %}
     {% include "partials/home-script.html" %}
+
+    <script>
+    // Set initial active tab from server context (default: lost)
+    (function() {
+        var defaultTab = "{{ active_tab|default:'lost' }}";
+        // Also check URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var tabFromUrl = urlParams.get('tab');
+        showTab(tabFromUrl || defaultTab);
+    })();
+    </script>
 {% endblock %}

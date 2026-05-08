@@ -1,4 +1,4 @@
-<div id="reportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm px-4">
+<div id="reportModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm px-4">
     <div id="modalContent" class="bg-white dark:bg-slate-900 hover:shadow-2xl dark:hover:shadow-glow hover:-translate-y-1 w-full max-w-lg rounded-[2.5rem] shadow-2xl relative flex flex-col max-h-[90vh] transform transition-all duration-300">
         <div class="p-8 pb-4 bg-white dark:bg-slate-900 border-b rounded-[2.5rem] border-slate-50 dark:border-slate-800">
             <div class="flex justify-between items-center mb-6">
@@ -23,7 +23,6 @@
 </style>
 
 <script>
-    // Update the function to accept 'type' (either 'LOST' or 'FOUND')
     function toggleModal(type) {
         const modal = document.getElementById('reportModal');
         const content = document.getElementById('modalContent');
@@ -31,12 +30,10 @@
         const typeHeader = document.querySelector('#modalContent h1');
 
         if (modal.classList.contains('hidden')) {
-            // Set the hidden input value so Django knows what it is
             if (type) {
                 typeInput.value = type;
                 typeHeader.innerText = type + " ITEM";
 
-                // Change color based on type (Optional but cool)
                 if (type === 'FOUND') {
                     typeHeader.classList.replace('text-indigo-800', 'text-emerald-600');
                 } else {
@@ -55,5 +52,4 @@
         }
         document.body.style.overflow = 'auto';
     }
-
 </script>

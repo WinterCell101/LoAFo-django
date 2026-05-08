@@ -1,135 +1,163 @@
 <script>
 function showTab(tab) {
     const tabs = ['found', 'lost', 'claimed'];
-
     tabs.forEach(t => {
         const container = document.getElementById(`${t}-container`);
         const button = document.getElementById(`btn-${t}`);
-
         if (t === tab) {
-            // Show this tab
-            container.classList.remove('hidden');
-            button.classList.add('bg-white', 'shadow-sm', 'text-indigo-600');
-            button.classList.remove('text-slate-500');
+            container?.classList.remove('hidden');
+            button?.classList.add('bg-white', 'dark:bg-slate-700', 'shadow-sm', 'text-indigo-600');
+            button?.classList.remove('text-slate-500', 'dark:text-slate-400');
         } else {
-            // Hide the others
-            container.classList.add('hidden');
-            button.classList.remove('bg-white', 'shadow-sm', 'text-indigo-600');
-            button.classList.add('text-slate-500');
+            container?.classList.add('hidden');
+            button?.classList.remove('bg-white', 'dark:bg-slate-700', 'shadow-sm', 'text-indigo-600');
+            button?.classList.add('text-slate-500', 'dark:text-slate-400');
         }
     });
 }
 
+// ---- DETAIL MODAL ----
 let modalImages = [];
 let currentModalIdx = 0;
 
-function openDetailModal(id, imgUrls, title, loc, exactLoc, owner, contact, desc) {
+function openDetailModal(id, imgUrls, title, subcategory, loc, exactLoc, owner, contact, desc) {
     const modal = document.getElementById('detailModal');
-    const container = document.getElementById('modalImageContainer'); // Fixed typo here
+    const container = document.getElementById('modalImageContainer');
     const navButtons = document.getElementById('modalNavButtons');
+    const dotsContainer = document.getElementById('modalDots');
 
-    modalImages = imgUrls || [];
+    if (!modal) return;
+
+    modalImages = Array.isArray(imgUrls) ? imgUrls.filter(Boolean) : [];
     currentModalIdx = 0;
-    container.innerHTML = '';
 
-    if (modalImages.length > 0) {
-        modalImages.forEach((url, index) => {
-            const img = document.createElement('img');
-            img.src = url;
-            // Using opacity for a smoother fade effect
-            img.className = `modal-slide-img w-full h-full object-contain transition-opacity duration-500 ease-in-out absolute inset-0 ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
-            container.appendChild(img);
-        });
-        navButtons.classList.toggle('hidden', modalImages.length <= 1);
-    } else {
-        container.innerHTML = `<div class="text-slate-300 flex flex-col items-center">
-                                    <i class="fa fa-image text-8xl mb-4"></i>
-                                    <p class="font-bold uppercase tracking-widest">No Photo</p>
-                                </div>`;
-        navButtons.classList.add('hidden');
+    if (container) {
+        container.innerHTML = '';
+        if (dotsContainer) dotsContainer.innerHTML = '';
+
+        if (modalImages.length > 0) {
+            modalImages.forEach((url, index) => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.className = `modal-slide-img w-full h-full object-contain absolute inset-0 transition-opacity duration-400 ease-in-out ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
+                container.appendChild(img);
+
+                // Dots
+                if (dotsContainer && modalImages.length > 1) {
+                    const dot = document.createElement('button');
+                    dot.className = `w-2 h-2 rounded-full transition-all ${index === 0 ? 'bg-white' : 'bg-white/40'}`;
+                    dot.onclick = () => goToModalSlide(index);
+                    dotsContainer.appendChild(dot);
+                }
+            });
+            if (navButtons) navButtons.classList.toggle('hidden', modalImages.length <= 1);
+        } else {
+            container.innerHTML = `<div class="text-slate-300 flex flex-col items-center">
+                                        <i class="fa fa-image text-8xl mb-4"></i>
+                                        <p class="font-bold uppercase tracking-widest">No Photo</p>
+                                   </div>`;
+            if (navButtons) navButtons.classList.add('hidden');
+        }
     }
 
-    document.getElementById('modalRef').textContent = "Reference #" + id;
-    document.getElementById('modalTitle').textContent = title;
-    document.getElementById('modalLoc').innerHTML = `<i class="fa fa-map-marker-alt mr-3 text-indigo-400"></i> ${loc}`;
-    document.getElementById('modalOwner').textContent = owner;
-    document.getElementById('modalContact').textContent = contact;
-    document.getElementById('modalDesc').textContent = desc || "No details provided.";
+    const set = (elId, value, isHTML = false) => {
+        const el = document.getElementById(elId);
+        if (el) isHTML ? (el.innerHTML = value) : (el.textContent = value);
+    };
+
+    set('modalRef', `Reference #${id}`);
+    set('modalTitle', title);
+    set('modalSubcategory', subcategory || 'General Category');
+    set('modalOwner', owner || 'N/A');
+    set('modalContact', contact || 'N/A');
+    set('modalDesc', desc || 'No details provided.');
+    set('modalExactLoc', exactLoc || '');
+    set('modalLoc', loc || '');
 
     modal.classList.remove('hidden');
+    modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
+
+    const card = document.getElementById('detailModalCard');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        card?.classList.remove('scale-95', 'opacity-0');
+        card?.classList.add('scale-100', 'opacity-100');
+    }));
 }
 
-function changeModalSlide(direction) {
+function prevModalImg() { goToModalSlide(currentModalIdx - 1); }
+function nextModalImg() { goToModalSlide(currentModalIdx + 1); }
+
+function goToModalSlide(index) {
     const slides = document.querySelectorAll('.modal-slide-img');
+    const dots = document.querySelectorAll('#modalDots button');
     if (slides.length <= 1) return;
 
-    // Hide current
-    slides[currentModalIdx].classList.replace('opacity-100', 'opacity-0');
+    slides[currentModalIdx]?.classList.replace('opacity-100', 'opacity-0');
+    dots[currentModalIdx]?.classList.replace('bg-white', 'bg-white/40');
 
-    // Calculate next index
-    currentModalIdx = (currentModalIdx + direction + slides.length) % slides.length;
+    currentModalIdx = ((index % slides.length) + slides.length) % slides.length;
 
-    // Show next
-    slides[currentModalIdx].classList.replace('opacity-0', 'opacity-100');
+    slides[currentModalIdx]?.classList.replace('opacity-0', 'opacity-100');
+    dots[currentModalIdx]?.classList.replace('bg-white/40', 'bg-white');
 }
 
 function closeDetailModal() {
-    document.getElementById('detailModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
+    const modal = document.getElementById('detailModal');
+    const card = document.getElementById('detailModalCard');
+    card?.classList.remove('scale-100', 'opacity-100');
+    card?.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+        modal?.classList.add('hidden');
+        modal?.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+    }, 250);
 }
 
+function handleModalOverlayClick(event) {
+    if (event.target === document.getElementById('detailModal')) closeDetailModal();
+}
+
+// ---- CARD IMAGE SLIDER ----
 const currentSlides = {};
 function changeSlide(itemId, direction) {
     if (currentSlides[itemId] === undefined) currentSlides[itemId] = 0;
     const images = document.querySelectorAll(`.slider-img-${itemId}`);
     if (images.length <= 1) return;
-
     images[currentSlides[itemId]].classList.add('hidden');
     currentSlides[itemId] = (currentSlides[itemId] + direction + images.length) % images.length;
     images[currentSlides[itemId]].classList.remove('hidden');
 }
-    // Fade out messages automatically
-    setTimeout(() => {
-        const msgs = document.querySelectorAll('.django-message');
-        msgs.forEach(m => {
-            m.style.opacity = '0';
-            setTimeout(() => m.remove(), 500);
-        });
-    }, 3000);
-// Inside partials/home-script.html
 
-const topBtn = document.getElementById('scrollToTopBtn');
+// Keyboard navigation for modal
+document.addEventListener('keydown', (e) => {
+    const modal = document.getElementById('detailModal');
+    if (!modal || modal.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeDetailModal();
+    if (e.key === 'ArrowLeft') prevModalImg();
+    if (e.key === 'ArrowRight') nextModalImg();
+});
 
-window.onscroll = function() {
-    if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
-        topBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
-        topBtn.classList.add('opacity-100', 'translate-y-0');
-    } else {
-        topBtn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
-        topBtn.classList.remove('opacity-100', 'translate-y-0');
-    }
-};
-
-topBtn.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+// Fade out Django messages after 3s
+setTimeout(() => {
+    document.querySelectorAll('.django-message').forEach(m => {
+        m.style.opacity = '0';
+        setTimeout(() => m.remove(), 500);
     });
-});
-window.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const activeTab = urlParams.get('tab');
-    if (activeTab) {
-        showTab(activeTab);
-    }
-});
+}, 3000);
 
-// Search highlight logic
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.has('q')) {
-    // If you want to automatically switch to the 'Lost' tab if they search for a lost item:
-    // showTab('lost');
-    console.log("Searching for:", urlParams.get('q'));
+// Scroll to top button
+const topBtn = document.getElementById('scrollToTopBtn');
+if (topBtn) {
+    window.onscroll = function() {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            topBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+            topBtn.classList.add('opacity-100', 'translate-y-0');
+        } else {
+            topBtn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+            topBtn.classList.remove('opacity-100', 'translate-y-0');
+        }
+    };
+    topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 }
 </script>

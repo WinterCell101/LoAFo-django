@@ -1,10 +1,8 @@
 <style>
-    /* Custom Footer Styling */
     footer a {
         position: relative;
         transition: color 0.3s ease;
     }
-
     footer a::after {
         content: '';
         position: absolute;
@@ -12,30 +10,28 @@
         height: 2px;
         bottom: -2px;
         left: 0;
-        background-color: #3b82f6; /* LoAFo Blue */
+        background-color: #3b82f6;
         transition: width 0.3s ease;
     }
+    footer a:hover::after { width: 100%; }
 
-    footer a:hover::after {
-        width: 100%;
-    }
-
-    /* Keeps footer at bottom without hiding it */
     body {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
     }
-
-    main {
-        flex: 1;
-    }
+    main { flex: 1; }
 
     footer {
         isolation: isolate;
         position: relative;
         z-index: 50;
-        background-color: #111827; /* gray-900 */
+        background-color: #111827; /* gray-900 always */
+    }
+
+    /* Dark mode: slightly lighter footer */
+    .dark footer {
+        background-color: #0f172a; /* slate-900 */
     }
 
     #footer-glow {

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoAFo | Lost & Found</title>
+    <link rel="icon" type="image/png" href="{% static 'logo.png' %}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -36,9 +37,16 @@
         from { width: 0 }
         to { width: 100% }
     }
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #e2e8f0; /* slate-200 */
+        border-radius: 10px;
+    }
 </style>
 </head>
-<body class="bg-white dark:bg-slate-950 overflow:hidden transition-colors duration-500">
+<body class="bg-white dark:bg-slate-950 transition-colors duration-500">
     <div class="min-h-screen w-full relative bg-gradient-to-b from-blue-900 to-indigo-800 flex items-center justify-center p-4 z-0">
         <svg class="absolute bottom-0 left-0 w-full h-1/2 z-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
             <defs>

@@ -5,31 +5,33 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import Item, ItemImage
 from django.contrib.auth import authenticate, login, logout
-
+from django.contrib.auth.forms import PasswordResetForm
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.template.loader import render_to_string
+from django.conf import settings
 
 
 # --- AUTHENTICATION VIEWS ---
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     if request.method == 'POST':
-        # identifier gets the value from the "Username or Email" field in your HTML
         identifier = request.POST.get('username')
         password = request.POST.get('password')
 
-        # Check if the user entered an email address
         if '@' in identifier:
             try:
-                # Find the user object that has this email
                 user_obj = User.objects.get(email=identifier)
-                # Use that user's actual username for authentication
                 username = user_obj.username
             except User.DoesNotExist:
-                # If no email is found, fallback to the raw input
                 username = identifier
         else:
             username = identifier
 
-        # Authenticate using the username (which might be an email if you registered that way)
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
@@ -42,9 +44,15 @@ def login_view(request):
 
     return render(request, 'account/login.html')
 
+
 def signup_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     if request.method == 'POST':
         email = request.POST.get('email')
+        fname = request.POST.get('first_name')
+        lname = request.POST.get('last_name')
+        chosen_username = request.POST.get('username')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
@@ -52,16 +60,21 @@ def signup_view(request):
             messages.error(request, "Passwords do not match.")
             return render(request, 'account/signup.html')
 
-        # Use the email as the username to ensure 'admin' isn't the display name
-        if User.objects.filter(username=email).exists():
+        if User.objects.filter(username=chosen_username).exists():
+            messages.error(request, "Username already taken.")
+            return render(request, 'account/signup.html')
+
+        if User.objects.filter(email=email).exists():
             messages.error(request, "A user with this email already exists.")
             return render(request, 'account/signup.html')
 
-        # Create user with email as the username
-        user = User.objects.create_user(username=email, email=email, password=password)
-        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-        messages.success(request, f"Welcome, {email}!")
-        return redirect('home')
+        user = User.objects.create_user(
+            username=chosen_username, email=email, password=password,
+            first_name=fname, last_name=lname
+        )
+        # After signup, redirect to login (not home)
+        messages.success(request, f"Account created! Please log in.")
+        return redirect('login')
 
     return render(request, 'account/signup.html')
 
@@ -72,11 +85,59 @@ def logout_view(request):
     return redirect('login')
 
 
+def forgot_password_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_url = request.build_absolute_uri(
+                f'/reset-password/{uid}/{token}/'
+            )
+            # In production, send email. For dev, show the link via message.
+            messages.success(
+                request,
+                f"Password reset link generated. If email is configured, it was sent. "
+                f"Dev link: {reset_url}"
+            )
+        except User.DoesNotExist:
+            # Don't reveal if email exists
+            messages.success(request, "If that email is registered, a reset link has been sent.")
+        return redirect('login')
+    return render(request, 'account/forgot_password.html')
+
+
+def reset_password_view(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+            if new_password != confirm_password:
+                messages.error(request, "Passwords do not match.")
+                return render(request, 'account/reset_password.html', {'valid': True, 'uid': uidb64, 'token': token})
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, "Password updated successfully! Please log in.")
+            return redirect('login')
+        return render(request, 'account/reset_password.html', {'valid': True, 'uid': uidb64, 'token': token})
+    else:
+        messages.error(request, "Invalid or expired reset link.")
+        return redirect('login')
+
+
 # --- CORE APP VIEWS ---
 
 @login_required
 def home(request):
     selected_location = request.GET.get('location')
+    active_tab = request.GET.get('tab', 'lost')  # default to lost items
 
     all_locations = Item.objects.exclude(location__isnull=True).exclude(location='') \
         .values_list('location', flat=True).distinct().order_by('location')
@@ -98,15 +159,17 @@ def home(request):
         'claimed_items': claimed_items,
         'claimed_count': claimed_items.count(),
         'locations': all_locations,
+        'active_tab': active_tab,
     }
     return render(request, 'homepage.html', context)
 
 
+@login_required
 def report_item(request):
     if request.method == 'POST':
         color = request.POST.get('color')
         if color == 'other':
-            color = request.POST.get('custom_color')
+            color = request.POST.get('custom_color', '').strip()[:50] or 'other'
 
         new_item = Item.objects.create(
             item_status=request.POST.get('report_type'),
@@ -164,5 +227,6 @@ def search_items(request):
         'found_count': found_items.count(),
         'lost_count': lost_items.count(),
         'claimed_count': claimed_items.count(),
+        'active_tab': 'lost',
     }
     return render(request, 'homepage.html', context)

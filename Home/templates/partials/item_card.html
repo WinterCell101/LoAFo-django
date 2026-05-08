@@ -1,12 +1,14 @@
-<div class="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 rounded-[2.5rem] p-6 relative overflow-hidden shadow-sm border group hover:shadow-2xl dark:hover:shadow-glow hover:-translate-y-1 transition-all duration-300"
+<div class="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 rounded-[2.5rem] p-6 relative overflow-hidden shadow-sm border group hover:shadow-2xl dark:hover:shadow-glow hover:-translate-y-1 transition-all duration-300 cursor-pointer"
      onclick="openDetailModal(
-            '{{ item.id }}',
-            [{% for img in item.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}], '{{ item.item_brand|default:item.category|escapejs }}',
+            '{{ item.item_id|escapejs }}',
+            [{% for img in item.images.all %}'{{ img.image.url|escapejs }}'{% if not forloop.last %},{% endif %}{% empty %}'/static/images/no-image.png'{% endfor %}],
+            '{{ item.item_name|default:item.category|escapejs }}',
+            '{{ item.sub_category|default:item.category|escapejs }}',
             '{{ item.location|escapejs }}',
-            '{{ item.exact_location|escapejs }}',
+            '{{ item.exact_location|default:item.additional_location|escapejs }}',
             '{{ item.owner_name|escapejs }}',
             '{{ item.contact_info|escapejs }}',
-            '{{ item.additional_location|escapejs }}'
+            '{{ item.get_formatted_description|escapejs }}'
         )">
 
     {% if item.item_status == 'CLAIMED' %}
@@ -16,10 +18,10 @@
     {% endif %}
 
     <div class="relative rounded-[2rem] overflow-hidden aspect-square mb-6 bg-slate-50 flex items-center justify-center">
-        <div id="slider-{{ item.id }}" class="w-full h-full">
+        <div id="slider-{{ item.item_id }}" class="w-full h-full">
             {% for img_obj in item.images.all %}
                 <img src="{{ img_obj.image.url }}"
-                     class="slider-img-{{ item.id }} object-cover w-full h-full transition-all duration-500 {% if not forloop.first %}hidden{% endif %}">
+                     class="slider-img-{{ item.item_id }} object-cover w-full h-full transition-all duration-500 {% if not forloop.first %}hidden{% endif %}">
             {% empty %}
                 <div class="flex flex-col items-center justify-center h-full text-slate-300">
                     <i class="fa fa-image text-4xl mb-2"></i>
@@ -27,26 +29,21 @@
                 </div>
             {% endfor %}
         </div>
+
         <span class="absolute top-4 left-4 bg-indigo-600 text-white text-[11px] px-4 py-1.5 rounded-full font-bold shadow-lg z-20">
             Ref: #{{ item.item_id }}
         </span>
 
         {% if item.images.all.count > 1 %}
             <div class="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between opacity-0 group-hover/slider:opacity-100 transition-opacity">
-                <button onclick="event.stopPropagation(); changeSlide('{{ item.id }}', -1)"
-                        class="bg-white/80 backdrop-blur-md p-2 rounded-full shadow-md hover:bg-white text-indigo-600 transition-all">
+                <button onclick="event.stopPropagation(); changeSlide('{{ item.item_id }}', -1)"
+                        class="bg-white/80 backdrop-blur-md p-2 rounded-full shadow-md hover:bg-white text-indigo-600 transition-all z-30">
                     <i class="fa fa-chevron-left text-xs"></i>
                 </button>
-                <button onclick="event.stopPropagation(); changeSlide('{{ item.id }}', 1)"
-                        class="bg-white/80 backdrop-blur-md p-2 rounded-full shadow-md hover:bg-white text-indigo-600 transition-all">
+                <button onclick="event.stopPropagation(); changeSlide('{{ item.item_id }}', 1)"
+                        class="bg-white/80 backdrop-blur-md p-2 rounded-full shadow-md hover:bg-white text-indigo-600 transition-all z-30">
                     <i class="fa fa-chevron-right text-xs"></i>
                 </button>
-            </div>
-
-            <div class="absolute bottom-4 inset-x-0 flex justify-center space-x-1.5">
-                {% for i in item.images.all %}
-                    <div class="w-1.5 h-1.5 rounded-full bg-white/50 border border-black/5"></div>
-                {% endfor %}
             </div>
         {% endif %}
     </div>
@@ -57,32 +54,25 @@
         </h4>
 
         <div class="mb-6">
-            <!-- Inside item_card.html -->
             <a href="{% url 'search_items' %}?q={{ item.location }}&tab={{ item.item_status|lower }}"
+               onclick="event.stopPropagation()"
                class="text-sm text-slate-800 dark:text-slate-200 flex items-center font-bold hover:text-indigo-600 transition-all">
                 <i class="fa fa-map-marker-alt mr-2 text-indigo-500"></i> {{ item.location }}
             </a>
 
-            {% if item.exact_location %}
             <p class="text-xs text-slate-400 flex items-center mt-1 ml-6 font-medium italic">
-                {{ item.exact_location }}
+                {{ item.exact_location|default:item.additional_location }}
             </p>
-            {% elif item.additional_location %}
-            <p class="text-xs text-slate-400 flex items-center mt-1 ml-6 font-medium italic">
-                {{ item.additional_location }}
-            </p>
-            {% endif %}
         </div>
 
         <div class="bg-slate-50/80 dark:bg-slate-800/50 rounded-[1.8rem] p-5 border border-slate-100 dark:border-slate-700">
             <div class="flex justify-between items-center mb-3">
-                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Contact</span>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Reporter</span>
                 <span class="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-3 py-1 rounded-lg">Active</span>
             </div>
-
             <p class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-4">{{ item.owner_name }}</p>
 
-            <span class="flex items-center justify-center w-full py-3.5 bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900 rounded-2xl font-bold text-xs hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 transition-all duration-300 cursor-pointer shadow-sm">
+            <span class="flex items-center justify-center w-full py-3.5 bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900 rounded-2xl font-bold text-xs pointer-events-none shadow-sm">
                 Click to View
             </span>
         </div>

@@ -1,5 +1,5 @@
 {% load static %}
-<aside class="w-full md:w-72 p-8 border-r border-gray-300 dark:border-slate-800 bg-slate-300 dark:bg-slate-900 transition-colors duration-300">
+<aside class="w-72 flex-shrink-0 p-8 border-r border-gray-300 dark:border-slate-800 bg-slate-300 dark:bg-slate-900 transition-colors duration-300">
     <div class="flex items-center space-x-4 mb-10">
        <div class="bg-indigo-600 p-2.5 rounded-xl text-white shrink-0 shadow-lg overflow-hidden">
             <img src="{% static 'logo.png' %}" alt="LoAFo" class="w-12 h-12 object-contain rounded-lg">
@@ -8,22 +8,21 @@
     </div>
 
     <button onclick="toggleModal()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-900 text-white rounded-xl transition-all mb-8 flex items-center justify-center gap-2" style="font-size: 13px;">
-    <i class="fa fa-plus"></i>
-    <span class="font-bold whitespace-nowrap">Report Lost Item</span>
-   </button>
+        <i class="fa fa-plus"></i>
+        <span class="font-bold whitespace-nowrap">Report Lost Item</span>
+    </button>
 
     <nav class="space-y-4">
-        <h3 class="font-bold text-slate-800a dark:text-slate-800 text-xs uppercase tracking-widest opacity-50">Locations</h3>
+        <h3 class="font-bold text-slate-500 dark:text-slate-400 text-xs uppercase tracking-widest opacity-70">Locations</h3>
 
-        <!-- This is your 'Reset' link to show everything -->
-        <a href="?{% if request.GET.q %}q={{ request.GET.q }}{% endif %}"
-           class="block text-sm font-bold {% if not request.GET.location %}text-indigo-600 dark:text-indigo-400{% else %}text-slate-500 dark:text-slate-400{% endif %}">
+        <!-- Reset: All Places — shows lost items by default -->
+        <a href="{% url 'home' %}?tab={{ active_tab|default:'lost' }}"
+           class="block text-sm font-bold {% if not request.GET.location %}text-indigo-600 dark:text-indigo-400{% else %}text-slate-500 dark:text-slate-400{% endif %} hover:text-indigo-400 transition-all">
             All Places
         </a>
 
-        <!-- INSERT THE DYNAMIC CODE HERE -->
         {% for loc in locations %}
-            <a href="?location={{ loc }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.tab %}&tab={{ request.GET.tab }}{% endif %}""
+            <a href="?location={{ loc }}&tab={{ request.GET.tab|default:'lost' }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
                class="block text-sm font-bold capitalize {% if request.GET.location == loc %}text-indigo-600 dark:text-indigo-400{% else %}text-slate-500 dark:text-slate-400{% endif %} hover:text-indigo-400 transition-all">
                 {{ loc }}
             </a>
