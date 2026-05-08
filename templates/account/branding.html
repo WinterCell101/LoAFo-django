@@ -1,0 +1,32 @@
+<style>
+    @keyframes expand-width {
+    0%, 100% { width: 8rem; opacity: 0.8; }
+    50% { width: 16rem; opacity: 1; transform: scaleY(1.2); }
+}
+.animate-expand {
+    animation: expand-width 3s ease-in-out infinite;
+}
+</style>
+
+<h1 class="text-8xl md:text-[10rem] lg:text-[12rem] font-black tracking-tighter mb-0 leading-none select-none uppercase"
+                style="
+                    color: white;
+                    -webkit-text-stroke: 1px #4f46e5;
+                    text-shadow:
+                        1px 1px 0px #cbd5e1,
+                        2px 2px 0px #cbd5e1,
+                        3px 3px 0px #94a3b8,
+                        4px 4px 0px #64748b,
+                        6px 6px 12px rgba(0,0,0,0.4);
+                ">
+                LO<span class="text-indigo-600"
+                        style="
+                            -webkit-text-stroke: 0px;
+                            text-shadow:
+                                1px 1px 0px #312e81,
+                                2px 2px 0px #312e81,
+                                3px 3px 0px #1e1b4b,
+                                5px 5px 10px rgba(0,0,0,0.3);
+                        ">AF</span>O
+</h1>
+<div class="h-2 bg-blue-600 mx-auto mb-8 rounded-full shadow-lg animate-expand"></div>
